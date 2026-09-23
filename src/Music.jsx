@@ -1,17 +1,12 @@
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 const TRACK = "spotify:track:5F1De2l58dlYfCaQr0e18J";
 const API_SRC = "https://open.spotify.com/embed/iframe-api/v1";
-const MusicContext = createContext(null);
 
 export function BackgroundMusic({ children }) {
   const hostRef = useRef(null);
   const playerRef = useRef(null);
   const pendingRef = useRef(false);
-  const playRef = useRef(() => {
-    pendingRef.current = true;
-  });
-  const [playing, setPlaying] = useState(false);
 
   useEffect(() => {
     let disposed = false;
@@ -28,13 +23,10 @@ export function BackgroundMusic({ children }) {
         if (typeof player.restart === "function") player.restart();
         else if (typeof player.loadUri === "function") player.loadUri(TRACK, false, 0);
         player.play();
-        setPlaying(true);
       } catch {
         pendingRef.current = true;
       }
     };
-
-    playRef.current = startFromPiano;
 
     const attach = (IFrameAPI) => {
       if (disposed || playerRef.current || !host) return;
@@ -51,7 +43,6 @@ export function BackgroundMusic({ children }) {
           controller.addListener("ready", () => {
             if (pendingRef.current) startFromPiano();
           });
-          controller.addListener("playback_started", () => setPlaying(true));
           if (pendingRef.current) startFromPiano();
         }
       );
@@ -72,8 +63,13 @@ export function BackgroundMusic({ children }) {
       document.body.appendChild(script);
     }
 
+    window.addEventListener("pointerdown", startFromPiano, { once: true, capture: true });
+    window.addEventListener("touchstart", startFromPiano, { once: true, capture: true, passive: true });
+
     return () => {
       disposed = true;
+      window.removeEventListener("pointerdown", startFromPiano, true);
+      window.removeEventListener("touchstart", startFromPiano, true);
       try {
         playerRef.current?.destroy?.();
       } catch {
@@ -84,22 +80,11 @@ export function BackgroundMusic({ children }) {
   }, []);
 
   return (
-    <MusicContext.Provider value={{ playing, play: () => playRef.current() }}>
+    <>
       {children}
       <div className="music-host" aria-hidden="true">
         <div ref={hostRef} />
       </div>
-    </MusicContext.Provider>
-  );
-}
-
-export function PlayCue() {
-  const music = useContext(MusicContext);
-  if (!music || music.playing) return null;
-
-  return (
-    <button type="button" className="play-cue" onClick={music.play}>
-      Toca aquí
-    </button>
+    </>
   );
 }

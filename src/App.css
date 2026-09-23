@@ -59,17 +59,9 @@ img {
   justify-content: flex-end;
   gap: 16px;
   width: min(100%, 640px);
-  min-height: 42svh;
+  min-height: 48svh;
   margin-inline: auto;
-  padding: calc(28px + env(safe-area-inset-top)) var(--pad) 0;
-}
-
-.hero-play {
-  display: flex;
-  justify-content: center;
-  width: min(100%, 640px);
-  margin-inline: auto;
-  padding: 22px var(--pad) 10px;
+  padding: calc(28px + env(safe-area-inset-top)) var(--pad) 28px;
 }
 
 .kicker {
@@ -97,37 +89,6 @@ img {
   line-height: 1.12;
 }
 
-.play-cue {
-  appearance: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: fit-content;
-  max-width: calc(100% - 8px);
-  min-height: 52px;
-  padding: 12px 32px;
-  border: 2px solid #7ec8f0;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.55);
-  color: var(--color-primary);
-  font: inherit;
-  font-size: 1.25rem;
-  font-weight: 500;
-  line-height: 1;
-  text-align: center;
-  cursor: pointer;
-  box-shadow: 0 8px 20px rgba(29, 78, 137, 0.08);
-}
-
-.play-cue:active {
-  transform: scale(0.98);
-}
-
-.play-cue:focus-visible {
-  outline: 3px solid var(--color-primary);
-  outline-offset: 3px;
-}
-
 .music-host {
   position: fixed;
   left: 8px;
@@ -153,7 +114,7 @@ img {
   gap: 64px;
   width: min(100%, 640px);
   margin-inline: auto;
-  padding: 4px var(--pad) 72px;
+  padding: 8px var(--pad) 72px;
 }
 
 .chapter {
@@ -317,10 +278,6 @@ img {
     gap: 12px;
     min-height: 0;
     padding-top: calc(20px + env(safe-area-inset-top));
-  }
-
-  .hero-play {
-    padding-block: 16px;
   }
 
   .farewell {
