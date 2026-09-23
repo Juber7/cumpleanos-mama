@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import chapters from "./chapters.js";
 import Fireworks from "./Fireworks.jsx";
-import { BackgroundMusic } from "./Music.jsx";
+import { BackgroundMusic, PlayCue } from "./Music.jsx";
 
 export default function App() {
   const [night, setNight] = useState(false);
@@ -54,12 +54,12 @@ export default function App() {
   }, [night]);
 
   return (
-    <>
-      <BackgroundMusic />
+    <BackgroundMusic>
       <header className="hero">
         <div className="hero-inner">
           <p className="kicker">Para mamá</p>
           <h1>El amor de una madre al pasar del tiempo se ve así…</h1>
+          <PlayCue />
         </div>
       </header>
 
@@ -96,6 +96,6 @@ export default function App() {
         </p>
       </footer>
       <Fireworks active={finale} />
-    </>
+    </BackgroundMusic>
   );
 }
