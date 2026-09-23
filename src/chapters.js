@@ -1,7 +1,9 @@
+const photo = (name) => `${import.meta.env.BASE_URL}photos/${name}`;
+
 const chapters = [
   {
     id: "circo",
-    src: "/photos/01-circo.jpg",
+    src: photo("01-circo.jpg"),
     width: 1024,
     height: 772,
     alt: "Mamá y dos niños sentados juntos en sillas rojas, en una visita al circo.",
@@ -9,7 +11,7 @@ const chapters = [
   },
   {
     id: "campamento",
-    src: "/photos/02-campamento.png",
+    src: photo("02-campamento.png"),
     width: 640,
     height: 480,
     alt: "Mamá con sus dos hijos bajo un portal, en la despedida hacia un campamento.",
@@ -17,7 +19,7 @@ const chapters = [
   },
   {
     id: "domingo",
-    src: "/photos/03-domingo.jpg",
+    src: photo("03-domingo.jpg"),
     width: 1024,
     height: 768,
     alt: "La familia reunida junto a una pared, un domingo después de la iglesia.",
@@ -25,7 +27,7 @@ const chapters = [
   },
   {
     id: "promocion",
-    src: "/photos/04-promocion.jpg",
+    src: photo("04-promocion.jpg"),
     width: 1024,
     height: 768,
     alt: "Un niño con toga de graduación, entre mamá y su hermana.",
@@ -33,7 +35,7 @@ const chapters = [
   },
   {
     id: "zoologico",
-    src: "/photos/05-zoologico.jpg",
+    src: photo("05-zoologico.jpg"),
     width: 1024,
     height: 768,
     alt: "Mamá y sus dos hijos sentados en una banca del zoológico.",
@@ -41,7 +43,7 @@ const chapters = [
   },
   {
     id: "asado",
-    src: "/photos/06-asado.jpg",
+    src: photo("06-asado.jpg"),
     width: 1000,
     height: 750,
     alt: "Mamá con sus hijos, en el asado de los quince años.",
@@ -49,7 +51,7 @@ const chapters = [
   },
   {
     id: "diciembre",
-    src: "/photos/07-diciembre.jpg",
+    src: photo("07-diciembre.jpg"),
     width: 1024,
     height: 768,
     alt: "La familia reunida en casa, en una reunión de diciembre.",
@@ -57,7 +59,7 @@ const chapters = [
   },
   {
     id: "antes",
-    src: "/photos/08-antes.jpg",
+    src: photo("08-antes.jpg"),
     width: 1024,
     height: 460,
     alt: "La familia en una mesa al aire libre, unos días antes de una partida.",
