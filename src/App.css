@@ -91,20 +91,20 @@ img {
 
 .music-host {
   position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 1px;
-  height: 1px;
+  left: 8px;
+  bottom: 8px;
+  z-index: 8;
+  width: 80px;
+  height: 80px;
   overflow: hidden;
-  opacity: 0;
+  opacity: 0.02;
   pointer-events: none;
-  clip-path: inset(50%);
 }
 
 .music-host iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
+  display: block;
+  width: 80px;
+  height: 80px;
   border: 0;
 }
 

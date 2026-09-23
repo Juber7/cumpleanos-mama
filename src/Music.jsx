@@ -1,47 +1,81 @@
 import { useEffect, useRef } from "react";
 
-const LOOKUP = "https://itunes.apple.com/lookup?id=254829074&country=mx";
-const PREVIEW =
-  "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/b7/15/49/b71549b6-4962-d40d-6d18-2c8998d286d4/mzaf_18273908599779331095.plus.aac.p.m4a";
+const TRACK = "spotify:track:5F1De2l58dlYfCaQr0e18J";
+const API_SRC = "https://open.spotify.com/embed/iframe-api/v1";
 
 export function BackgroundMusic() {
-  const audioRef = useRef(null);
+  const hostRef = useRef(null);
+  const playerRef = useRef(null);
 
   useEffect(() => {
-    const audio = new Audio(PREVIEW);
-    audio.loop = true;
-    audio.preload = "auto";
-    audio.volume = 0.85;
-    audioRef.current = audio;
+    let disposed = false;
+    const host = hostRef.current;
+    if (!host) return undefined;
 
-    fetch(LOOKUP)
-      .then((response) => (response.ok ? response.json() : null))
-      .then((data) => {
-        const url = data?.results?.[0]?.previewUrl;
-        if (!url || audio.src === url) return;
-        const wasPlaying = !audio.paused;
-        audio.src = url;
-        if (wasPlaying) audio.play().catch(() => {});
-      })
-      .catch(() => {});
-
-    const start = () => {
-      audio.play().catch(() => {});
+    const play = () => {
+      const player = playerRef.current;
+      if (!player) return;
+      try {
+        player.play();
+      } catch {
+        /* El navegador puede pedir un toque primero. */
+      }
     };
 
-    window.addEventListener("pointerdown", start, { once: true, capture: true });
-    window.addEventListener("touchstart", start, { once: true, capture: true, passive: true });
-    window.addEventListener("scroll", start, { once: true, passive: true });
+    const attach = (IFrameAPI) => {
+      if (disposed || playerRef.current || !host) return;
+      IFrameAPI.createController(
+        host,
+        {
+          uri: TRACK,
+          width: 80,
+          height: 80,
+        },
+        (controller) => {
+          if (disposed) return;
+          playerRef.current = controller;
+          controller.addListener("ready", play);
+          play();
+        }
+      );
+    };
+
+    const previous = window.onSpotifyIframeApiReady;
+    window.onSpotifyIframeApiReady = (api) => {
+      window.SpotifyIframeApi = api;
+      if (typeof previous === "function") previous(api);
+      attach(api);
+    };
+
+    if (window.SpotifyIframeApi) attach(window.SpotifyIframeApi);
+    else if (!document.querySelector(`script[src="${API_SRC}"]`)) {
+      const script = document.createElement("script");
+      script.src = API_SRC;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+
+    window.addEventListener("pointerdown", play, true);
+    window.addEventListener("touchstart", play, { capture: true, passive: true });
+    window.addEventListener("scroll", play, { passive: true });
 
     return () => {
-      window.removeEventListener("pointerdown", start, true);
-      window.removeEventListener("touchstart", start, true);
-      window.removeEventListener("scroll", start);
-      audio.pause();
-      audio.src = "";
-      audioRef.current = null;
+      disposed = true;
+      window.removeEventListener("pointerdown", play, true);
+      window.removeEventListener("touchstart", play, true);
+      window.removeEventListener("scroll", play);
+      try {
+        playerRef.current?.destroy?.();
+      } catch {
+        /* ignore */
+      }
+      playerRef.current = null;
     };
   }, []);
 
-  return null;
+  return (
+    <div className="music-host" aria-hidden="true">
+      <div ref={hostRef} />
+    </div>
+  );
 }
