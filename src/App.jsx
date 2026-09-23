@@ -59,6 +59,8 @@ export default function App() {
         <div className="hero-inner">
           <p className="kicker">Para mamá</p>
           <h1>El amor de una madre al pasar del tiempo se ve así…</h1>
+        </div>
+        <div className="hero-play">
           <PlayCue />
         </div>
       </header>
