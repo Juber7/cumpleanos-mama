@@ -6,16 +6,22 @@ const API_SRC = "https://open.spotify.com/embed/iframe-api/v1";
 export function BackgroundMusic() {
   const hostRef = useRef(null);
   const playerRef = useRef(null);
+  const fromStartRef = useRef(false);
 
   useEffect(() => {
     let disposed = false;
     const host = hostRef.current;
     if (!host) return undefined;
 
-    const play = () => {
+    const startFromPiano = () => {
       const player = playerRef.current;
       if (!player) return;
       try {
+        if (!fromStartRef.current) {
+          if (typeof player.restart === "function") player.restart();
+          else if (typeof player.loadUri === "function") player.loadUri(TRACK, false, 0);
+          fromStartRef.current = true;
+        }
         player.play();
       } catch {
         /* El navegador puede pedir un toque primero. */
@@ -34,8 +40,8 @@ export function BackgroundMusic() {
         (controller) => {
           if (disposed) return;
           playerRef.current = controller;
-          controller.addListener("ready", play);
-          play();
+          controller.addListener("ready", startFromPiano);
+          startFromPiano();
         }
       );
     };
@@ -55,15 +61,15 @@ export function BackgroundMusic() {
       document.body.appendChild(script);
     }
 
-    window.addEventListener("pointerdown", play, true);
-    window.addEventListener("touchstart", play, { capture: true, passive: true });
-    window.addEventListener("scroll", play, { passive: true });
+    window.addEventListener("pointerdown", startFromPiano, true);
+    window.addEventListener("touchstart", startFromPiano, { capture: true, passive: true });
+    window.addEventListener("scroll", startFromPiano, { passive: true });
 
     return () => {
       disposed = true;
-      window.removeEventListener("pointerdown", play, true);
-      window.removeEventListener("touchstart", play, true);
-      window.removeEventListener("scroll", play);
+      window.removeEventListener("pointerdown", startFromPiano, true);
+      window.removeEventListener("touchstart", startFromPiano, true);
+      window.removeEventListener("scroll", startFromPiano);
       try {
         playerRef.current?.destroy?.();
       } catch {

@@ -9,6 +9,14 @@
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://open.spotify.com" />
+    <link rel="preconnect" href="https://embed-cdn.spotifycdn.com" crossorigin />
+    <script>
+      window.onSpotifyIframeApiReady = function (api) {
+        window.SpotifyIframeApi = api;
+      };
+    </script>
+    <script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500;1,600;1,700&display=swap"
       rel="stylesheet"
